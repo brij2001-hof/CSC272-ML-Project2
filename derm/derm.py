@@ -7,15 +7,18 @@ from sklearn.model_selection import train_test_split
 import sklearn.naive_bayes as nb
 import sklearn.svm as svm
 import sklearn.neural_network as nn
-import sklearn.metrics as metrics
 from sklearn.preprocessing import RobustScaler
 from sklearn.model_selection import KFold, validation_curve
 from sklearn.pipeline import Pipeline
+import sys
+import os
+sys.path.append(os.path.abspath('../'))
 import plots_to_pdf
 from sklearn.model_selection import StratifiedKFold
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OrdinalEncoder,LabelEncoder
 from sklearn.model_selection import learning_curve
+
 def evaluate_parameters(filename):
     df = pd.read_csv('dermatology_database_1.csv')
     np.random.seed(42)
