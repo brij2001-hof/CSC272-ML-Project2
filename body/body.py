@@ -20,27 +20,21 @@ from sklearn.preprocessing import OrdinalEncoder,LabelEncoder
 from sklearn.model_selection import learning_curve
 
 def evaluate_parameters(filename):
-    df = pd.read_csv(os.path.abspath('../derm/dermatology_database_1.csv'))
+    import seaborn as sns
+    df = pd.read_csv(os.path.abspath('../body/bodyPerformance.csv'))
     np.random.seed(42)
     df = df.dropna()
-    df['age'] = df['age'].replace('?', np.nan)
-    imputer = SimpleImputer(missing_values=np.nan, strategy='mean')
-    imputer.fit(df[['age']])
-    df['age'] = imputer.transform(df[['age']]).ravel().astype('int64')
+    df = df.replace({'M':0, 'F':1})
+    df = df.replace({'A':1,'B':2,'C':3,'D':4})
+
      #correlation graph
     # matplotlib.use('TkAgg')
     # plt.figure(figsize=(10, 8))
     # sns.heatmap(df.corr(),annot=True, cmap='coolwarm')
     # plt.show()
     # exit()
-    oenc = OrdinalEncoder()
-    df_encoded = df.copy()
-    df_encoded[df.columns] = oenc.fit_transform(df[df.columns])
-    label_encoder = LabelEncoder()
-    df_encoded['class'] = label_encoder.fit_transform(df['class'])
-    print(df_encoded.head())
-    X = df_encoded.drop(columns=['class'])
-    y = df_encoded['class']
+    X = df.iloc[:, :-1]    # Independent variable
+    y = df.iloc[:, -1]     # Dependent variable
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42,stratify=y)
     
@@ -48,22 +42,33 @@ def evaluate_parameters(filename):
         'Naive Bayes': {
             'pipeline': Pipeline([('clf',nb.GaussianNB())]),
             'params':{
-                'clf__priors':[None, [0.5,0.5], [0.7,0.3], [0.3,0.7]],
+                'clf__priors':[
+                    None,  # Let GaussianNB calculate priors from the data
+                    np.array([0.25, 0.25, 0.25, 0.25]),  # Equal probabilities
+                    np.array([0.4, 0.2, 0.2, 0.2]),      # First class dominant
+                    np.array([0.2, 0.4, 0.2, 0.2]),      # Second class dominant
+                    np.array([0.2, 0.2, 0.4, 0.2]),      # Third class dominant
+                    np.array([0.2, 0.2, 0.2, 0.4]),      # Fourth class dominant
+                    np.array([0.4, 0.4, 0.1, 0.1]),      # First two classes dominant
+                    np.array([0.1, 0.1, 0.4, 0.4])       # Last two classes dominant
+                ],
                 'clf__var_smoothing':[1e-9,1e-8,1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1]
             }
         },
         'SVM': {
-            'pipeline': Pipeline([('clf',svm.SVC())]),
+            'pipeline': Pipeline([('clf',svm.SVC(verbose=True))]),
             'params':{
                 'clf__C':[0.001,0.01,0.1,1,10,100],
-                'clf__kernel':['linear','poly','rbf','sigmoid']
+                'clf__kernel':['poly','rbf']
             }
         },
         'Neural Network': {
-            'pipeline': Pipeline([('clf',nn.MLPClassifier())]),
+            'pipeline': Pipeline([('clf',nn.MLPClassifier(verbose=True,random_state=42))]),
             'params':{
-                'clf__hidden_layer_sizes':[(10,20,10),(20,30,20),(30,40,30),(40,50,40),(50,60,50),(4,8,16,32,64,128,64,32,16,8,4)],
-                'clf__activation':['relu','tanh','logistic']
+                'clf__hidden_layer_sizes':[(2,4,2),(4,8,4),(7,14,32,64,32,14,4),(20,30,20),(8,16,32,20,10,8),(12,24,64,24,8),(40,50,40),(50,60,50),(32,64,128,256,128,64,32)],
+                # 'clf__hidden_layer_sizes':[(2,4,2),(4,8,4),(8,16,8),(16,32,16),
+                #                            (32,64,32),(32,64,128,256,128,64,32),(64,128,64),(80,100,80),(128,256,128)],
+                'clf__learning_rate_init':[0.001,0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
             }
         }
     }
@@ -72,6 +77,7 @@ def evaluate_parameters(filename):
     t=[]
     for name, config in models.items():
         pipeline = config['pipeline']
+        print(pipeline)
         params = config['params']
         
         for param_name, param_range in params.items():
@@ -111,40 +117,34 @@ def evaluate_parameters(filename):
                 ax.annotate(f"Highest Test Score: {highest_test_score:.4f}, value: {highest_test_score_value}", xy=(0.05, 0.95), xycoords='axes fraction', ha='left', va='top', color="red")
                 figures.append(fig)  # Add the figure to the list
                 continue
-            if param_name == 'clf__class_weight':
-                temp = []
-                for pw in param_range:
-                    if pw == 'balanced':
-                        temp.append(str(pw))
-                    else:
-                        # Format as fraction
-                        temp.append(r'$\frac{{{0:.2f}}}{{{1:.2f}}}$'.format(pw[0], pw[1]))
-                param_labels = temp
-                ax.set_title(f"{name} - Class Weight")
-                ax.set_xlabel('Class Weight Class0,Class1')
-                try:
-                    param_value = f"0:{highest_test_score_value[0]:.2f} , 1:{highest_test_score_value[1]:.2f}"
-                except:
-                    param_value = str(highest_test_score_value)
-            else:
-                param_labels = param_range
-                ax.set_title(f"{name} - {param_name.replace('clf__', '').replace('_', ' ').title()}")
-                ax.set_xlabel(param_name.replace('clf__', '').replace('_', ' ').title())
-                try:
-                    #3 significant digits
-                    if highest_test_score_value.round(3) == 0.000:
-                        param_value = f'{highest_test_score_value:.5f}'
-                    else:
-                        param_value = f"{highest_test_score_value.round(3)}"
-
-                except:
-                    param_value = str(highest_test_score_value)
+            
+            param_labels = param_range
+            ax.set_title(f"{name} - {param_name.replace('clf__', '').replace('_', ' ').title()}")
+            ax.set_xlabel(param_name.replace('clf__', '').replace('_', ' ').title())
+            try:
+                #3 significant digits
+                if highest_test_score_value.round(3) == 0.000:
+                    param_value = f'{highest_test_score_value:.5f}'
+                else:
+                    param_value = f"{highest_test_score_value.round(3)}"
+            except:
+                param_value = str(highest_test_score_value)
             if param_name == 'clf__var_smoothing':
                 param_labels = [f"{x:.0e}" for x in param_range]
-            else:
-                param_labels = param_range
-            if param_name == 'clf__hidden_layer_sizes':
-                param_labels = [f"{x[0]}," for x in param_range]
+            elif param_name == 'clf__hidden_layer_sizes':
+                print(param_range)
+                temp = []
+                for x in param_range:
+                    print(x)
+                    i = str(x)
+                    i = i.replace(',','\n')
+                    print(i)
+                    temp.append(i)
+                param_labels = temp
+                #change figure size to 10,10
+                fig.set_size_inches(10, 10)
+            elif param_name == 'clf__priors':
+                param_labels = ['None' if x is None else f'Prior {i+1}' for i, x in enumerate(param_range)]
             else:
                 param_labels = param_range
             ax.set_ylabel("F1 Weighted Score")
@@ -173,5 +173,5 @@ def evaluate_parameters(filename):
 
 if __name__ == "__main__":
     import datetime
-    filename = datetime.datetime.now().strftime("dermatology_HyperTuning_%Y-%m-%d_%H-%M-%S.pdf")
+    filename = datetime.datetime.now().strftime("body_HyperTuning_%Y-%m-%d_%H-%M-%S.pdf")
     evaluate_parameters(filename=filename)

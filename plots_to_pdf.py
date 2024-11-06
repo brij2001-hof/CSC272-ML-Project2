@@ -13,8 +13,6 @@ def to_pdf(figures, filename='plots.pdf'):
     - figures: List of matplotlib.figure.Figure objects
     - filename: Name of the output PDF file
     """
-    #assign folder to filename if churn is in filename
-    
     with PdfPages(filename) as pdf:
         for fig in figures:
             pdf.savefig(fig)
