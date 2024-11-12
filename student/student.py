@@ -40,11 +40,14 @@ def evaluate_parameters(filename):
     plt.close()
     
     X = df.drop('GradeClass', axis=1)
+    print(len(X.columns))
+    
     # #scale the first 9 columns ,worsens the performance
     # scaler = StandardScaler()
     # X[X.columns[:9]] = scaler.fit_transform(X[X.columns[:9]])
     y = df['GradeClass']  
     print(y.value_counts())
+    # exit()
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42,stratify=y)
     
     models ={
@@ -59,7 +62,7 @@ def evaluate_parameters(filename):
             'pipeline': Pipeline([('clf',svm.SVC(random_state=42))]),
             'params':{
                 'clf__C':[0.001,0.01,0.1,1,10,100],
-                # 'clf__kernel':['linear','poly','rbf','sigmoid']
+                'clf__kernel':['linear','poly','rbf','sigmoid']
             }
         },
         'Neural Network': {
@@ -76,7 +79,7 @@ def evaluate_parameters(filename):
     t=[]
     from sklearn.metrics import cohen_kappa_score
     from sklearn.metrics import make_scorer
-    cohen_kappa_scorer = make_scorer(cohen_kappa_score)
+    cohen_kappa_scorer = make_scorer(cohen_kappa_score,weights='quadratic')
     for name, config in models.items():
         pipeline = config['pipeline']
         print(pipeline)
@@ -104,7 +107,7 @@ def evaluate_parameters(filename):
             pipeline.set_params(**{param_name: highest_test_score_value})
             pipeline.fit(X_train,y_train)
             y_pred = pipeline.predict(X_test)
-            cohen_kappa = cohen_kappa_score(y_test, y_pred)
+            cohen_kappa = cohen_kappa_score(y_test, y_pred,weights='quadratic')
             print(f"{name} - {param_name}: {highest_test_score_value} - {highest_test_score:.4f} - {cohen_kappa:.4f}")
             fig,ax=plt.subplots(figsize=(8, 6))
             param_labels = param_range
