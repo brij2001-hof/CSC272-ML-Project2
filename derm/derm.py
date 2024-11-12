@@ -17,11 +17,13 @@ import plots_to_pdf
 from sklearn.model_selection import StratifiedKFold
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OrdinalEncoder,LabelEncoder
-from sklearn.model_selection import learning_curve
 
 def evaluate_parameters(filename):
     import seaborn as sns
-    df = pd.read_csv(os.path.abspath('../derm/dermatology_database_1.csv'))
+    try:
+        df = pd.read_csv(os.path.abspath('../derm/dermatology_database_1.csv'))
+    except:
+        df = pd.read_csv(os.path.abspath('derm/dermatology_database_1.csv'))
     np.random.seed(42)
     df = df.dropna()
     df['age'] = df['age'].replace('?', np.nan)
@@ -150,7 +152,7 @@ def evaluate_parameters(filename):
                 ax.barh(param_labels, test_mean,0.5, alpha=0.5, color='blue')
                 ax.set_title(f"{name} - {param_name.replace('clf__', '').replace('_', ' ').title()}")
                 ax.set_ylabel(param_name.replace('clf__', '').replace('_', ' ').title())
-                ax.set_xlabel("Cohen Kappa Score")
+                ax.set_xlabel("Recall Score")
                 ax.set_xlim((min(test_mean))-0.005,max(test_mean)+0.005)
                 ax.set_ylim(top=2)
                 ax.grid(True)

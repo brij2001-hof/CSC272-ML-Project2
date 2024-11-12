@@ -1,0 +1,22 @@
+
+
+
+Model: Naive Bayes,
+Best Parameters: ['var_smoothing=0.001', 'priors=None'], 
+Time to Train: 0.0018163065910339355,
+ Training Cohen Kappa Score: 0.8057566733115901,
+Cohen Kappa TEST Score: 0.8
+
+
+Model: SVM,
+Best Parameters: ['kernel=rbf', 'C=100'], 
+Time to Train: 0.02633317470550537,
+ Training Cohen Kappa Score: 0.8501205600246444,
+Cohen Kappa TEST Score: 0.829
+
+
+Model: Neural Network,
+Best Parameters: ['learning_rate_init=0.001', 'hidden_layer_sizes=(8, 16, 32, 20, 10, 8)'], 
+Time to Train: 0.5374169230461121,
+ Training Cohen Kappa Score: 0.8192211900627162,
+Cohen Kappa TEST Score: 0.832

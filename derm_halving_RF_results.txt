@@ -1,0 +1,17 @@
+
+Naive Bayes best hyperparameters:
+var_smoothing= 0.0001
+priors= None
+
+SVM best hyperparameters:
+kernel= linear
+C= 0.1
+
+Neural Network best hyperparameters:
+learning_rate_init= 0.01
+hidden_layer_sizes= (16, 32, 32, 16)
+
+Best scores for each model:
+Naive Bayes: 0.9661111111111111
+SVM: 0.9783333333333333
+Neural Network: 0.953888888888889

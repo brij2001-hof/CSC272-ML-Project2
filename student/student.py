@@ -21,7 +21,10 @@ from sklearn.model_selection import learning_curve
 
 def evaluate_parameters(filename):
     import seaborn as sns
-    df = pd.read_csv(os.path.abspath('../student/Student_performance_data.csv'))
+    try:
+        df = pd.read_csv(os.path.abspath('../student/Student_performance_data.csv'))
+    except:
+        df = pd.read_csv(os.path.abspath('student/Student_performance_data.csv'))
     np.random.seed(42)
     df = df.dropna()
     df= df.drop(columns='StudentID')
@@ -32,12 +35,12 @@ def evaluate_parameters(filename):
     print(df.head())
 
      #correlation graph
-    matplotlib.use('TkAgg')
-    plt.figure(figsize=(12, 10))
-    sns.heatmap(df.corr(),annot=True, cmap='coolwarm', fmt='.2f')
-    plt.tight_layout()
-    plt.savefig('correlation_matrix.png')
-    plt.close()
+    # matplotlib.use('TkAgg')
+    # plt.figure(figsize=(12, 10))
+    # sns.heatmap(df.corr(),annot=True, cmap='coolwarm', fmt='.2f')
+    # plt.tight_layout()
+    # plt.savefig('correlation_matrix.png')
+    # plt.close()
     
     X = df.drop('GradeClass', axis=1)
     print(len(X.columns))
