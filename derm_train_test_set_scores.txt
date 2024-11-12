@@ -3,20 +3,20 @@
 
 Model: Naive Bayes,
 Best Parameters: ['var_smoothing=0.0001', 'priors=None'], 
-Time to Train: 0.0018771605491638183,
+Time to Train: 0.001883260726928711,
  Training Recall Score: 0.9804474312767452,
 Recall TEST Score: 0.963
 
 
 Model: SVM,
-Best Parameters: ['kernel=linear', 'C=0.1'], 
-Time to Train: 0.0029235172271728518,
- Training Recall Score: 0.9894706721741154,
-Recall TEST Score: 0.959
+Best Parameters: ['kernel=linear', 'C=87.87891'], 
+Time to Train: 0.003275692939758301,
+ Training Recall Score: 1.0,
+Recall TEST Score: 0.972
 
 
 Model: Neural Network,
-Best Parameters: ['learning_rate_init=0.01', 'hidden_layer_sizes=(16, 32, 32, 16)'], 
-Time to Train: 0.04941819715499878,
- Training Recall Score: 0.9981141413780147,
-Recall TEST Score: 0.959
+Best Parameters: ['learning_rate_init=0.0203', 'hidden_layer_sizes=(16, 32, 32, 16)'], 
+Time to Train: 0.039689335823059085,
+ Training Recall Score: 0.9973933388632293,
+Recall TEST Score: 0.913

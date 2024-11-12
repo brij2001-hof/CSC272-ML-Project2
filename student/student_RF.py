@@ -47,7 +47,7 @@ def halving_random_search(filename='student_learning.pdf'):
         'SVM': {
             'model': svm.SVC(random_state=42),
             'params':{
-                'C':[0.001,0.01,0.1,1,10,100],
+                'C':np.linspace(0.001,100,100),
                 'kernel':['linear','poly','rbf','sigmoid']
             }
         },
@@ -56,7 +56,7 @@ def halving_random_search(filename='student_learning.pdf'):
             'params':{
                 'hidden_layer_sizes':[(100,),(10,16,32,32,16,10),(8,16,32,20,10,8),(20,40,20),(32,50,50,32)],
                                         #    (12,24,64,24,8),(40,50,40),(50,60,50),(32,64,128,256,128,64,32)],
-                'learning_rate_init':[0.0005,0.001,0.01,0.02,0.03,0.06,0.08,0.1]
+                'learning_rate_init':np.linspace(0.0001,1,100)
             }
         }
     }

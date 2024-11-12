@@ -54,7 +54,7 @@ def halving_random_search(filename='derm_learning.pdf'):
         'SVM': {
             'model': svm.SVC(random_state=42),
             'params':{
-                'C':[0.001,0.01,0.1,1,10,100],
+                'C':np.linspace(0.001,100,100),
                 'kernel':['linear','poly','rbf','sigmoid']
             }
         },
@@ -62,7 +62,7 @@ def halving_random_search(filename='derm_learning.pdf'):
             'model': nn.MLPClassifier(random_state=42),
             'params':{
                 'hidden_layer_sizes':[(100,),(16,32,32,16),(20,30,20),(30,40,30),(40,50,40),(50,60,50)],
-                'learning_rate_init':[0.001,0.01,0.1,0.2,0.3,0.4,0.5]
+                'learning_rate_init':np.linspace(0.0001,1,100)
             }
         }
     }
