@@ -42,7 +42,7 @@ def halving_random_search(filename='derm_learning.pdf'):
     y = df_encoded['class']
     # print(y.value_counts())
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42,stratify=y)
-
+    
     models ={
         'Naive Bayes': {
             'model': nb.GaussianNB(),
@@ -123,6 +123,7 @@ def halving_random_search(filename='derm_learning.pdf'):
                 else:
                     j[key]=round(value,5)
 
+    incorrect_indices = {}
     with open('derm_train_test_set_scores.txt', 'w') as f:
         for name,config in models.items():
             test_model = config['model'].set_params(**best_params[name])
@@ -143,8 +144,11 @@ def halving_random_search(filename='derm_learning.pdf'):
             plt.xlabel("Predicted")
             plt.ylabel("True")
             figure.append(fig)
-
-
+            #y_test to array
+            y_test = np.array(y_test)
+            y_pred = np.array(y_pred)
+            incorrect_indices[name] = [i for i in range(len(y_test)) if y_test[i] != y_pred[i]]
+            print(f"Incorrect indices for {name}: {incorrect_indices[name]}")
             print(f"\n\n\nModel: {name},\nBest Parameters: {temp}, \nTime to Train: {mean_fit_times[name]},\n Training Recall Score: {mean_train_scores[name]},\nRecall TEST Score: {recall}")
             f.write(f"\n\n\nModel: {name},\nBest Parameters: {temp}, \nTime to Train: {mean_fit_times[name]},\n Training Recall Score: {mean_train_scores[name]},\nRecall TEST Score: {recall}")
             
