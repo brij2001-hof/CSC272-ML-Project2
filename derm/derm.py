@@ -13,6 +13,7 @@ from sklearn.pipeline import Pipeline
 import sys
 import os
 sys.path.append(os.path.abspath('../'))
+sys.path.append(os.path.abspath('.'))
 import plots_to_pdf
 from sklearn.model_selection import StratifiedKFold
 from sklearn.impute import SimpleImputer
@@ -49,6 +50,7 @@ def evaluate_parameters(filename):
     y = df_encoded['class']
     print(y.value_counts())
     
+    
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42,stratify=y)
     
     models ={
@@ -70,7 +72,8 @@ def evaluate_parameters(filename):
             'pipeline': Pipeline([('clf',nn.MLPClassifier(random_state=42))]),
             'params':{
                 'clf__hidden_layer_sizes':[(100,),(16,32,32,16),(20,30,20),(30,40,30),(40,50,40),(50,60,50)],
-                'clf__learning_rate_init':[0.001,0.01,0.1,0.2,0.3,0.4,0.5]
+                # 'clf__learning_rate_init':[0.0001,0.0005,0.0007,0.001,0.0015,0.002,0.01,0.1,0.12]
+                'clf__learning_rate_init' : np.linspace(0.0001,0.1,100)
             }
         }
     }

@@ -1,8 +1,11 @@
 import datetime
+import os
 
-
-derm_HyperTuning_filename = datetime.datetime.now().strftime("derm_HyperTuning_%Y-%m-%d_%H-%M-%S.pdf")
-student_HyperTuning_filename = datetime.datetime.now().strftime("student_HyperTuning_%Y-%m-%d_%H-%M-%S.pdf")
+output_folder = ("./output/")
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+derm_HyperTuning_filename = output_folder + datetime.datetime.now().strftime("derm_HyperTuning_%Y-%m-%d_%H-%M-%S.pdf")
+student_HyperTuning_filename = output_folder + datetime.datetime.now().strftime("student_HyperTuning_%Y-%m-%d_%H-%M-%S.pdf")
 
 '''
 Evaluating hyperparameters for each model using validation curve.
@@ -17,8 +20,8 @@ student.student.evaluate_parameters(filename=student_HyperTuning_filename)
 
 
 ''''''''''''''''''''''''''''''''''''
-derm_learning_curves_filename = datetime.datetime.now().strftime("derm_learning_curves_%Y-%m-%d_%H-%M-%S.pdf")
-student_learning_curves_filename = datetime.datetime.now().strftime("student_learning_curves_%Y-%m-%d_%H-%M-%S.pdf")
+derm_learning_curves_filename = output_folder + datetime.datetime.now().strftime("derm_learning_curves_%Y-%m-%d_%H-%M-%S.pdf")
+student_learning_curves_filename = output_folder + datetime.datetime.now().strftime("student_learning_curves_%Y-%m-%d_%H-%M-%S.pdf")
 '''
 Calculates best params using halving random search.
 Fits on train set, predicts on test set and,

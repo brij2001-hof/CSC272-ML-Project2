@@ -5,13 +5,14 @@ priors= None
 
 SVM best hyperparameters:
 kernel= rbf
-C= 66.667
+degree= 4
+C= 79.79818181818183
 
 Neural Network best hyperparameters:
-learning_rate_init= 0.060700000000000004
-hidden_layer_sizes= (32, 50, 50, 32)
+learning_rate_init= 0.06165454545454546
+hidden_layer_sizes= (20, 40, 20)
 
 Best scores for each model:
 Naive Bayes: 0.7778830265560958
-SVM: 0.833773846274761
-Neural Network: 0.8269728127308552
+SVM: 0.8340236740020069
+Neural Network: 0.8268899124959137

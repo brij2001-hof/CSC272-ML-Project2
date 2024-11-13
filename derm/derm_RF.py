@@ -61,8 +61,8 @@ def halving_random_search(filename='derm_learning.pdf'):
         'Neural Network': {
             'model': nn.MLPClassifier(random_state=42),
             'params':{
-                'hidden_layer_sizes':[(100,),(16,32,32,16),(20,30,20),(30,40,30),(40,50,40),(50,60,50)],
-                'learning_rate_init':np.linspace(0.0001,1,100)
+                'hidden_layer_sizes':[(16,32,32,16),(100,),(20,30,20),(30,40,30),(40,50,40),(50,60,50)],
+                'learning_rate_init':np.linspace(0.0001,0.1,100)
             }
         }
     }
@@ -155,5 +155,5 @@ def halving_random_search(filename='derm_learning.pdf'):
     plots_to_pdf.to_pdf(figure,filename)
 if __name__ == '__main__':
     import datetime
-    filename = datetime.datetime.now().strftime("derm_RF_%Y-%m-%d_%H-%M-%S.pdf")
+    filename = datetime.datetime.now().strftime("derm_learning_curves_%Y-%m-%d_%H-%M-%S.pdf")
     halving_random_search(filename)

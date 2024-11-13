@@ -48,7 +48,8 @@ def halving_random_search(filename='student_learning.pdf'):
             'model': svm.SVC(random_state=42),
             'params':{
                 'C':np.linspace(0.001,100,100),
-                'kernel':['linear','poly','rbf','sigmoid']
+                'kernel':['linear','poly','rbf','sigmoid'],
+                'degree':[1,2,3,4,5,6,7,8,9,10]
             }
         },
         'Neural Network': {
@@ -56,7 +57,7 @@ def halving_random_search(filename='student_learning.pdf'):
             'params':{
                 'hidden_layer_sizes':[(100,),(10,16,32,32,16,10),(8,16,32,20,10,8),(20,40,20),(32,50,50,32)],
                                         #    (12,24,64,24,8),(40,50,40),(50,60,50),(32,64,128,256,128,64,32)],
-                'learning_rate_init':np.linspace(0.0001,1,100)
+                'learning_rate_init':np.linspace(0.0001,0.1,100)
             }
         }
     }
@@ -152,5 +153,5 @@ def halving_random_search(filename='student_learning.pdf'):
     plots_to_pdf.to_pdf(figure,filename)
 if __name__ == '__main__':
     import datetime
-    filename = datetime.datetime.now().strftime("student_RF_%Y-%m-%d_%H-%M-%S.pdf")
+    filename = datetime.datetime.now().strftime("student_learning_curves_%Y-%m-%d_%H-%M-%S.pdf")
     halving_random_search(filename)
